@@ -1,0 +1,41 @@
+// Excerpt from the Langova Prisma schema (about 60 models in total).
+// Only identity and infrastructure fields are shown. Billing, pricing,
+// payout and exam models are omitted.
+
+model User {
+  id             String    @id @default(cuid())
+  name           String?
+  email          String    @unique
+  emailVerified  DateTime?
+  hashedPassword String?
+  role           String    @default("STUDENT") // legacy; UserRole is the source of truth
+
+  // Bumped whenever every existing session must stop working (a password
+  // reset). Sessions are JWTs with a 30-day life and no server-side store,
+  // so the jwt callback compares this against the value stamped in the token
+  // and refuses the token if they differ.
+  sessionVersion Int       @default(0)
+
+  // Null means "use the browser's zone". Deliberately not backfilled from a
+  // guess: a stored guess is indistinguishable from a deliberate choice, so a
+  // traveller would be pinned to wherever they signed up.
+  timezone       String?
+
+  // Opt-out email for things a person would otherwise miss. Never consulted
+  // for transactional mail (verification, password reset, receipts).
+  notifyByEmail  Boolean   @default(true)
+
+  roles          UserRole[]
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  // ...relations omitted
+}
+
+model RateLimitCounter {
+  key       String   @id          // "<name>:<ip>" or "login:<ip>:<email>"
+  count     Int      @default(0)
+  resetAt   DateTime              // a row past this is treated as empty
+  updatedAt DateTime @updatedAt
+
+  @@index([resetAt])              // lets a sweep drop dead rows cheaply
+}

@@ -1,37 +1,73 @@
 # Langova
 
-A full-stack ed-tech platform for standardized English exam prep (IELTS, TOEFL, Linguaskill) — mock exams with automated grading, results analytics, booking, and subscriptions.
+A full-stack ed-tech platform for English exam prep (IELTS, TOEFL, MUET, Linguaskill): mock exams with automatic grading, live tutor sessions, group classes, e-learning courses and subscriptions, with the admin tooling to run it.
 
 **Live:** [langovaprep.com](https://langovaprep.com)
 
+> **The source code is private.** This repository is a showcase of what Langova is and how it is built. It contains no application code, credentials or business data.
+
 ## What it does
 
-Langova runs the full loop for exam prep: students take full-length mock exams, get automatically graded (including LLM-assisted scoring for writing and speaking sections), see section-by-section performance breakdowns, book tutor sessions, and manage subscriptions — all in one platform.
+**For students**
+- Full-length mock exams across four exam formats, graded against each board's own criteria
+- Section-by-section reports and an action plan generated from the results
+- One-to-one tutor booking, rescheduling and cancellation with automatic refund rules
+- Group classes: request a class, get matched into a group, chat and vote on schedules
+- Video calls in the browser, e-learning courses with quizzes and assignments
+- Placement test, notifications, billing and per-student settings
 
-Built and shipped solo, from architecture through production deployment and billing.
+**For teachers**
+- Availability and schedule management, session and student views
+- Course authoring with an approval flow, group-class proposals
+- Payouts and earnings statements
 
-## Tech Stack
+**For admins**
+- Student, teacher and admin management, reviews, refunds, vouchers
+- Finance dashboard (revenue, payouts), support inbox, session recordings
+- Group-class demand and formation queue
 
-- **Frontend:** Next.js, React, TypeScript, Tailwind CSS
-- **Backend:** Next.js API routes, serverless functions
-- **Database:** PostgreSQL
-- **Payments:** Stripe (subscriptions, billing)
-- **AI:** Groq — LLM-assisted grading pipeline for open-response sections
-- **Deployment:** Vercel
+## Tech stack
 
-## Key Features
+| Layer | Tools |
+|---|---|
+| Frontend | Next.js 14 (App Router), React 18, TypeScript, Tailwind CSS |
+| Backend | Next.js route handlers, serverless functions, scheduled cron jobs |
+| Database | PostgreSQL with Prisma (60 models, 76 migrations), kept in a shared workspace package |
+| Auth | NextAuth, email verification, password reset, role-based access |
+| Payments | Stripe: subscriptions, one-off exam bundles, invoices, refunds, payouts |
+| AI | Groq LLMs for writing/speaking grading and exam generation |
+| Video | Daily for calls, with webhook-driven attendance tracking |
+| Email | Nodemailer with transactional templates |
+| Validation | Zod |
+| Testing | Vitest (120+ test files) |
+| Deployment | Vercel |
+| i18n | English and Arabic, with right-to-left layout |
 
-- Full exam simulation across 3 exam formats
-- Automated grading pipeline, including LLM scoring for subjective sections
-- Student analytics dashboards
-- Tutor booking system
-- Subscription billing and payment handling
-- Internal finance/reporting tooling (revenue, payouts)
+## Highlights
 
-## Notes
+- **Grades like the real exam.** Each board has its own Writing and Speaking criteria and its own raw-to-band scaling, instead of one generic rubric.
+- **Money logic lives in one place.** Cancellation, refunds and teacher payouts derive from shared pure functions, so the student, teacher and platform figures can't disagree. The booking UI shows the same numbers the server applies.
+- **Monorepo.** `apps/frontend` and `packages/db`, with typecheck, lint, tests and a production build all run before shipping.
+- **Operational tooling included.** Rate limiting, cron endpoints, health checks, webhook handling and admin finance reporting.
 
-This is a showcase repo describing the production platform at langovaprep.com. The live codebase is private; this repo documents the architecture and stack for portfolio purposes.
+## By the numbers
 
-## Author
+- About 157,000 lines of TypeScript
+- 60 database models and 76 migrations
+- 127 API routes and 84 pages
+- 120+ test files
+- 4 exam formats, 2 interface languages (one right-to-left)
 
-Built by [Ahmed Montasser](https://www.linkedin.com/in/ahmed-montasser-a15a55215/) — AI Systems Engineer, edge autonomy & computer vision, full-stack product development.
+## Read more
+
+- [Architecture overview](docs/architecture.md)
+- [Engineering decisions](docs/engineering-decisions.md): problems I hit and how I solved them
+- [Code samples](samples/): rate limiting, webhook verification, error handling and a schema excerpt
+
+## Status
+
+Live in production. I designed and built the whole platform: architecture, frontend, backend, database, payments, AI grading and deployment.
+
+## Contact
+
+Ahmed Montasser, [@ahmedvictor507](https://github.com/ahmedvictor507)
