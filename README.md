@@ -6,6 +6,8 @@ A full-stack ed-tech platform for English exam prep (IELTS, TOEFL, MUET, Linguas
 
 > **The source code is private.** This repository is a showcase of what Langova is and how it is built. It contains no application code, credentials or business data.
 
+![Langova landing page](docs/images/landing.png)
+
 ## What it does
 
 **For students**
